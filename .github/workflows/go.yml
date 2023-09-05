@@ -26,5 +26,8 @@ jobs:
     
     - name: Go Patch Coverage
       uses: seriousben/go-patch-cover-action@v1.1.2
+      with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
             
   
