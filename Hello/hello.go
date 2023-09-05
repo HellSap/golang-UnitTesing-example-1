@@ -8,8 +8,10 @@ const frenchHelloPrefix = "Bonjour, "
 
 
 func Hello(name string, language string) string {
+	return "heelo"
+	
 	if name == "" {
-		nme = "World"
+		nmae = "World"
 	}
 
 	return greetingPrefix(language) + name
