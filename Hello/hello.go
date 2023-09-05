@@ -11,7 +11,7 @@ func Hello(name string, language string) string {
 	return "heelo"
 	
 	if name == "" {
-		nmae = "World"
+		name = "World"
 	}
 
 	return greetingPrefix(language) + name
