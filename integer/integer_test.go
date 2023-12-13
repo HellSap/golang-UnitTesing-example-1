@@ -31,3 +31,6 @@ func assertCorrectMessage(t testing.TB, got, want int) {
 		t.Errorf("got %d want %d", got, want)
 	}
 }
+func randomBullshitgo(){
+// adding a random function
+}
