@@ -22,3 +22,6 @@ func SimpleIntrest(p , r , t int)int{
     }
     return (p*r*t)/100
 }
+func tesing() int{
+//hola
+}
