@@ -26,3 +26,7 @@ func TestArea(t *testing.T) {
 	}
 
 }
+
+func test(){
+//hola amigos 
+}
