@@ -21,7 +21,7 @@ jobs:
       - name: Get latest release tag
         id: latest_release
         run: |
-          latest_tag=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/latest" | jq -r '.tag_name')
+          latest_tag=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/releases/latest" | jq -r '.tag_name')
           echo "Latest tag: $latest_tag"
           echo "TAG=$latest_tag" >> $GITHUB_OUTPUT
 
