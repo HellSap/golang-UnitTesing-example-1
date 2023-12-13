@@ -1,0 +1,70 @@
+name: Create Release and Upload Binary
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Get latest release tag
+        id: latest_release
+        run: |
+          latest_tag=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/latest" | jq -r '.tag_name')
+          echo "Latest tag: $latest_tag"
+          echo "TAG=$latest_tag" >> $GITHUB_OUTPUT
+
+      - name: Compare tags
+        id: compare_tags
+        run: |
+          pip install yq
+          CURRENT_LATEST_TAG=${{ steps.latest_release.outputs.TAG }}
+          NEW_TAG=$(/home/runner/.local/bin/yq '.' check-release.yaml | jq --raw-output '.version')
+          if [ $NEW_TAG != $CURRENT_LATEST_TAG ]; then
+            echo "New tag found $TAG"
+            echo "TAG_CHANGED=true" >> $GITHUB_OUTPUT
+            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_OUTPUT
+          else
+            echo "No new tag found, next steps will be skipped"
+            echo "TAG_CHANGED=false" >> $GITHUB_OUTPUT          
+          fi
+
+      - name: Push Git tag
+        run: |
+          if [[ "${{ steps.compare_tags.outputs.TAG_CHANGED }}" == "true" ]]; then
+            git pull origin main
+            git tag ${{ steps.compare_tags.outputs.NEW_TAG }}
+            git push origin ${{ steps.compare_tags.outputs.NEW_TAG }}
+          fi
+        if: steps.compare_tags.outputs.TAG_CHANGED == 'true'
+
+      - name: Create GitHub Release
+        id: create_release
+        if: steps.compare_tags.outputs.TAG_CHANGED == 'true'
+        run: |
+            release_output=$(curl -s -X POST \
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              -H "Accept: application/vnd.github.v3+json" \
+              https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/releases \
+              -d '{
+                "tag_name": "${{ steps.compare_tags.outputs.NEW_TAG }}",
+                "name": "${{ steps.compare_tags.outputs.NEW_TAG }}",
+                "body": "**Full Changelog**: https://github.com/HellSap/golang-UnitTesing-example-1/compare/${{ steps.latest_release.outputs.TAG }}...${{ steps.compare_tags.outputs.NEW_TAG }}",
+                "draft": false,
+                "prerelease": false
+              }')
+            echo Release_Output: $release_output
+            release_id=$(echo $release_output | jq --raw-output '.id')
+            echo Release_Id: $release_id
+            echo "RELEASE_ID=$release_id" >> $GITHUB_OUTPUT          
