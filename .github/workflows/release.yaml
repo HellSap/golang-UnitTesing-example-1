@@ -75,7 +75,7 @@ jobs:
               -d '{
                 "tag_name": "${{ steps.compare_tags.outputs.NEW_TAG }}",
                 "name": "${{ steps.compare_tags.outputs.NEW_TAG }}",
-                "body": "steps.generate_release_notes.output.RELEASE_NOTES",
+                "body": "${{ steps.generate_release_notes.output.RELEASE_NOTES }}",
                 "draft": false,
                 "prerelease": false
               }')
