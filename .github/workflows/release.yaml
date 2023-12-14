@@ -62,7 +62,7 @@ jobs:
          https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/releases/generate-notes \
          -d '{"tag_name":"${{ steps.compare_tags.outputs.NEW_TAG }}","target_commitish":"main","previous_tag_name":"${{steps.latest_release.outputs.TAG}}"}')
          echo "Releae Output: $release_output"
-         release_notes=$(echo "$release_output" | jq -r '.body')
+         release_notes=$(echo "$release_output" | jq '.body')
          echo "Release Notes : $release_notes"
          echo "RELEASE_NOTES='$release_notes' " >> $GITHUB_OUTPUT
 
