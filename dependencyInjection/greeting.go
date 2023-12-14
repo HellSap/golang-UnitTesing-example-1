@@ -13,3 +13,6 @@ func Greet(writer io.Writer, name string) {
 func main() {
 	Greet(os.Stdout, "Elodie")
 }
+func test(){
+	//test 1
+}
