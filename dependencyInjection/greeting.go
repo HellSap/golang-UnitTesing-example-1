@@ -14,5 +14,6 @@ func main() {
 	Greet(os.Stdout, "Elodie")
 }
 func test(){
+//test 2
 	//test 1
 }
