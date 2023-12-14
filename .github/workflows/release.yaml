@@ -39,6 +39,19 @@ jobs:
             echo "No new tag found, next steps will be skipped"
             echo "TAG_CHANGED=false" >> $GITHUB_OUTPUT          
           fi
+          
+      - name: Get merges
+        if: steps.compare_tags.outputs.TAG_CHANGED == 'true'
+        run: |
+          BASE_TAG="${{steps.latest_release.outputs.TAG}}"
+          HEAD_TAG="${{steps.compare_tags.outputs.NEW_TAG}}"
+          prs=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/pulls?base=main&state=closed" | jq -r --arg base_tag "$BASE_TAG" --arg head_tag "$HEAD_TAG" '
+            map(select(.merged_at and (.merged_at >= $base_tag and .merged_at <= $head_tag)))
+            | .[].merge_commit_sha
+            ')
+          for merge_sha in $prs; do
+              echo "Merge commit $merge_sha is part of a pull request"
+          done
 
       - name: Push Git tag
         run: |
