@@ -54,13 +54,14 @@ jobs:
         id: generate_release_notes
         if: steps.compare_tags.outputs.TAG_CHANGED == 'true'
         run: |
-         release_notes=$(curl -L \
+         release_output=$(curl -L \
          -X POST \
          -H "Accept: application/vnd.github+json" \
          -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
          -H "X-GitHub-Api-Version: 2022-11-28" \
          https://api.github.com/repos/HellSap/golang-UnitTesing-example-1/releases/generate-notes \
          -d '{"tag_name":"${{ steps.compare_tags.outputs.NEW_TAG }}","target_commitish":"main","previous_tag_name":"${{steps.latest_release.outputs.TAG}}"}')
+         release_notes=$(echo "$release_output" | jq -r '.body')
          echo "RELEASE_NOTES=$release_notes" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
