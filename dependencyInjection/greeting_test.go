@@ -23,3 +23,6 @@ func TestRandom(){
 }
 
 // hello - 2
+
+func introTest(){
+}
