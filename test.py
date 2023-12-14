@@ -22,5 +22,7 @@ def main():
     print(f"Mean: {mean}")
     print(f"Standard Deviation: {std_dev}")
 
+# def for no reasons fed
+
 if __name__ == "__main__":
     main()
