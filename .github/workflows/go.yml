@@ -41,6 +41,7 @@ jobs:
       with:
           version: v1.54
 
+
     - name: SonarQube Scan
       uses: sonarsource/sonarqube-scan-action@master
       env:
